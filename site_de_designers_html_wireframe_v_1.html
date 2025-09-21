@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hub de Designers • Wireframe</title>
+  <style>
+    /* =====================
+       DESIGN SYSTEM
+       ===================== */
+    :root{
+      --bg: #0b0c0f;          /* fundo principal (escuro) */
+      --bg-soft: #11131a;     /* cartões/sections */
+      --text: #e7ebf0;        /* texto primário */
+      --text-muted:#a6adbb;   /* texto secundário */
+      --border:#1f2430;
+      --blue:#3b82f6;         /* destaque */
+      --green:#22c55e;        /* botões de compra */
+      --chip:#171a22;
+      --chip-active:#0f1728;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    [data-theme="light"]{
+      --bg:#f7f8fb;          
+      --bg-soft:#ffffff;
+      --text:#0b0c0f;
+      --text-muted:#525e77;
+      --border:#e5e7ee;
+      --chip:#eef1f8;
+      --chip-active:#e3e9f7;
+      --shadow: 0 10px 30px rgba(0, 16, 40, .08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;scroll-behavior:smooth}
+    body{font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--text)}
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    .container{width:min(1200px, 92%); margin-inline:auto}
+    .hide{display:none!important}
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.2) blur(10px);
+      background: color-mix(in oklab, var(--bg), transparent 28%);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{display:flex; align-items:center; gap:.8rem; padding:.7rem 0}
+    .brand{display:flex; align-items:center; gap:.6rem; font-weight:700}
+    .brand .logo{width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, #0ea5e9, #3b82f6 60%, #60a5fa); box-shadow: var(--shadow)}
+    nav{display:flex; gap:1rem; align-items:center; flex-wrap:wrap}
+    .nav-links{display:flex; gap:.9rem; align-items:center; flex:1; min-width:240px}
+    .nav-links a{opacity:.9; padding:.35rem .55rem; border-radius:8px}
+    .nav-links a:hover{background:var(--chip)}
+
+    .quick{display:flex; gap:.5rem; align-items:center}
+    .btn, button{border:0; background:var(--chip); color:var(--text); padding:.55rem .9rem; border-radius:10px; cursor:pointer; font-weight:600}
+    .btn:hover{background:var(--chip-active)}
+    .btn-ghost{background:transparent}
+    .btn-green{background: var(--green); color:#07120a}
+    .btn-green:hover{filter:brightness(.95)}
+    .btn-blue{background: var(--blue); color:white}
+
+    /* Search */
+    .searchbar{display:flex; align-items:center; gap:.6rem; background:var(--bg-soft); border:1px solid var(--border); padding:.45rem .6rem; border-radius:12px; min-width:260px; flex:1}
+    .searchbar input{flex:1; background:transparent; border:0; color:var(--text); outline:none}
+    .icon{width:18px; height:18px; display:inline-block}
+
+    /* Carousel */
+    .carousel{position:relative; overflow:hidden; border:1px solid var(--border); border-radius:16px; background:var(--bg-soft); box-shadow: var(--shadow)}
+    .carousel .viewport{height: clamp(220px, 40vw, 485px)}
+    .track{display:flex; height:100%; transition: transform .6s ease; will-change: transform}
+    .slide{min-width:100%; height:100%; position:relative; display:flex; align-items:center; justify-content:center}
+    .slide .banner{position:absolute; inset:0; background:linear-gradient(120deg, #0b1220, #0f172a 50%, #111827);} 
+    .slide .banner::after{content:""; position:absolute; inset:0; background: radial-gradient(1000px 300px at 10% 10%, rgba(59,130,246,.25), transparent 60%), radial-gradient(800px 300px at 90% 85%, rgba(59,130,246,.18), transparent 60%)}
+    .slide .content{position:relative; z-index:2; text-align:center}
+    .slide h3{font-size:clamp(18px,2.4vw,28px); margin:0 0 .35rem; letter-spacing:.4px}
+    .slide p{margin:0 0 .8rem; color:var(--text-muted)}
+
+    .carousel .ctrl{position:absolute; top:50%; transform:translateY(-50%); background:color-mix(in oklab, var(--bg), white 5%); border:1px solid var(--border); box-shadow: var(--shadow); width:38px; height:38px; border-radius:50%; display:grid; place-items:center}
+    .carousel .prev{left:10px}
+    .carousel .next{right:10px}
+
+    .dots{position:absolute; bottom:10px; left:0; right:0; display:flex; gap:.5rem; justify-content:center}
+    .dot{width:8px; height:8px; border-radius:999px; background:#3b3f4a; border:1px solid var(--border)}
+    .dot.active{background:var(--blue)}
+
+    /* Filtros */
+    .section{margin: 28px 0}
+    .section h2{margin:0 0 12px; font-size: clamp(18px, 2.2vw, 26px)}
+    .filters{display:flex; gap:.5rem; flex-wrap:wrap}
+    .chip{background:var(--chip); padding:.4rem .7rem; border:1px solid var(--border); border-radius:999px; cursor:pointer; user-select:none}
+    .chip.active{background:var(--chip-active); outline:1px solid color-mix(in oklab, var(--blue), transparent 55%)}
+
+    /* Cards */
+    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap:16px}
+    .card{grid-column: span 12; background:var(--bg-soft); border:1px solid var(--border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; box-shadow: var(--shadow)}
+    .media{aspect-ratio: 4/3; background: linear-gradient(135deg, #1f2937, #0b1220); position:relative}
+    .media::after{content:""; position:absolute; inset:0; background: repeating-conic-gradient(from 0deg, color-mix(in oklab, var(--blue), transparent 80%) 0 15deg, transparent 15deg 30deg); opacity:.14; mix-blend:screen}
+    .card .content{padding:14px}
+    .price{font-weight:800}
+    .muted{color:var(--text-muted)}
+
+    @media (min-width:520px){ .card{grid-column: span 6} }
+    @media (min-width:900px){ .card{grid-column: span 3} }
+
+    /* FAQ */
+    .faq{border:1px solid var(--border); border-radius:16px; overflow:hidden}
+    .faq-item{border-bottom:1px solid var(--border)}
+    .faq-item:last-child{border-bottom:0}
+    .faq-q{width:100%; text-align:left; padding:16px; background:var(--bg-soft); color:var(--text); border:0; display:flex; align-items:center; justify-content:space-between; font-weight:700}
+    .faq-a{padding:0 16px 16px; color:var(--text-muted); display:none}
+    .faq-item.open .faq-a{display:block}
+
+    /* Footer */
+    footer{border-top:1px solid var(--border); padding:20px 0; color:var(--text-muted)}
+
+    /* Floating actions */
+    .fab{position:fixed; right:18px; bottom:18px; z-index:60; display:flex; flex-direction:column; gap:10px}
+    .fab a, .fab button{width:48px; height:48px; border-radius:14px; display:grid; place-items:center; box-shadow: var(--shadow)}
+
+    /* Wireframe/Lousa mode */
+    .wireframe *[data-block]{outline: 1px dashed color-mix(in oklab, var(--blue), transparent 35%)}
+    .wireframe *[data-block]::before{content:attr(data-block); position:absolute; top:6px; left:6px; font-size:11px; color:var(--text-muted); background: color-mix(in oklab, var(--bg), transparent 20%); padding:2px 6px; border-radius:6px; border:1px solid var(--border)}
+  </style>
+</head>
+<body>
+  <!-- ============== HEADER ============== -->
+  <header>
+    <div class="container topbar" data-block="Header">
+      <div class="brand" aria-label="Logo e nome do site">
+        <div class="logo" title="Sua logo"></div>
+        <span>Hub de Designers</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Navegação primária">
+        <a href="#inicio">Início</a>
+        <a href="#produtos">Produtos</a>
+        <a href="#sec3d">3D</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="searchbar" role="search" aria-label="Pesquisar produtos">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="Buscar produtos…" aria-label="Buscar" />
+      </div>
+
+      <div class="quick">
+        <a class="btn" href="#cadastro">Cadastro</a>
+        <a class="btn" href="#login">Login</a>
+        <button id="toggleTheme" class="btn" title="Alternar modo escuro/claro" aria-label="Alternar tema">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+        </button>
+        <button id="toggleWire" class="btn btn-ghost" title="Lousa (wireframe)" aria-label="Ativar/Desativar Lousa">Lousa</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="inicio" class="container">
+
+    <!-- ============== CARROSSEL (1350x485) ============== -->
+    <section class="section" data-block="Carrossel de Banners">
+      <div class="carousel" aria-roledescription="carrossel" aria-label="Banners Promocionais">
+        <div class="viewport">
+          <div class="track" id="carouselTrack">
+            <!-- Slides reais -->
+            <div class="slide" data-kind="real">
+              <div class="banner" style="background-image: linear-gradient(120deg, #0b1220, #0f172a 50%, #111827);"></div>
+              <div class="content">
+                <h3 style="color:var(--blue)">Pacotes de Design Gráfico</h3>
+                <p class="muted">Identidades visuais e artes para redes sociais</p>
+                <a class="btn-blue" href="#produtos">Ver pacotes</a>
+              </div>
+            </div>
+            <div class="slide" data-kind="real">
+              <div class="banner"></div>
+              <div class="content">
+                <h3 style="color:var(--blue)">Kits de Anúncios Prontos</h3>
+                <p class="muted">Formatos para Meta e Google Ads</p>
+                <a class="btn-blue" href="#produtos">Explorar kits</a>
+              </div>
+            </div>
+            <div class="slide" data-kind="real">
+              <div class="banner"></div>
+              <div class="content">
+                <h3 style="color:var(--blue)">Assets para Streamers</h3>
+                <p class="muted">Overlays, alerts e painéis</p>
+                <a class="btn-blue" href="#produtos">Ver assets</a>
+              </div>
+            </div>
+            <div class="slide" data-kind="real">
+              <div class="banner"></div>
+              <div class="content">
+                <h3 style="color:var(--blue)">Modelos 3D Exclusivos</h3>
+                <p class="muted">Renders e packs prontos para compra</p>
+                <a class="btn-blue" href="#sec3d">Conferir 3D</a>
+              </div>
+            </div>
+            <!-- Clones serão injetados via JS para loop infinito sem “salto” visual -->
+          </div>
+        </div>
+        <button class="ctrl prev" aria-label="Anterior" id="prevBtn">‹</button>
+        <button class="ctrl next" aria-label="Próximo" id="nextBtn">›</button>
+        <div class="dots" id="dots" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ============== PRODUTOS + FILTROS ============== -->
+    <section id="produtos" class="section" data-block="Produtos">
+      <h2>Produtos</h2>
+      <p class="muted" style="margin:0 0 10px">Filtre por categoria ou use a busca acima.</p>
+      <div class="filters" role="tablist" aria-label="Filtros de categoria">
+        <span class="chip active" data-filter="todos" role="tab" aria-selected="true">Todos</span>
+        <span class="chip" data-filter="design-grafico" role="tab">Design Gráfico</span>
+        <span class="chip" data-filter="produtos-anuncios" role="tab">Produtos de Anúncios</span>
+        <span class="chip" data-filter="kit-anuncios" role="tab">Kit de Anúncios</span>
+        <span class="chip" data-filter="kit-streamer" role="tab">Kit para Streamer</span>
+        <span class="chip" data-filter="kit-meta-ads" role="tab">Kit p/ Meta Ads</span>
+        <span class="chip" data-filter="kit-google-ads" role="tab">Kit p/ Google Ads</span>
+      </div>
+
+      <div class="grid" id="gridProdutos" aria-live="polite" style="margin-top:12px">
+        <!-- 12 cards exemplo com várias categorias -->
+        
+        <!-- Card 1 -->
+        <article class="card" data-categories="design-grafico">
+          <div class="media" aria-hidden="true"></div>
+          <div class="content">
+            <h3>Pacote Identidade Social</h3>
+            <p class="muted">Artes mensais + templates editáveis</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 49</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card" data-categories="produtos-anuncios, kit-anuncios">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Kit Anúncios Conversão</h3>
+            <p class="muted">10 criativos persuasivos (1080x1350)</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 39</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card" data-categories="kit-streamer">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Overlay Stream Neon</h3>
+            <p class="muted">Twitch/YouTube + alerts animados</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 29</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card" data-categories="kit-meta-ads, produtos-anuncios">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Meta Ads: Pack Loja</h3>
+            <p class="muted">Carrosséis + stories para e-commerce</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 45</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="card" data-categories="kit-google-ads, produtos-anuncios">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Google Ads Display Pro</h3>
+            <p class="muted">Banners responsivos multi-formatos</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 35</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="card" data-categories="design-grafico">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Kit Branding Essencial</h3>
+            <p class="muted">Logo + paleta + tipografia</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 50</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 7 -->
+        <article class="card" data-categories="kit-anuncios, produtos-anuncios">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Kit Anúncios Black Week</h3>
+            <p class="muted">Pronto pra escalar ofertas</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 25</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 8 -->
+        <article class="card" data-categories="kit-streamer">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Alerts Minimal</h3>
+            <p class="muted">Sons + animações sutis</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 27</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 9 -->
+        <article class="card" data-categories="kit-meta-ads">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Meta Ads: Lookalike Pack</h3>
+            <p class="muted">Criativos para públicos semelhantes</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 31</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 10 -->
+        <article class="card" data-categories="kit-google-ads">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Google Ads: Pesquisa+</h3>
+            <p class="muted">Extensões & variações de texto</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 33</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 11 -->
+        <article class="card" data-categories="design-grafico">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Pack Carrosséis IG</h3>
+            <p class="muted">Templates 1080×1350 prontos</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 28</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 12 -->
+        <article class="card" data-categories="produtos-anuncios, kit-anuncios">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Kit CPL Baixo</h3>
+            <p class="muted">Anúncios focados em leads</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 30</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ============== SEÇÃO 3D ============== -->
+    <section id="sec3d" class="section" data-block="Seção 3D">
+      <h2>Produtos 3D</h2>
+      <div class="grid" id="grid3D" aria-live="polite" style="margin-top:12px">
+        <article class="card" data-tags="3d, render">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Pack Renders Tech</h3>
+            <p class="muted">10 cenas high-poly • FBX+PNG</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 50</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-tags="3d, model">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Model Kit Produto</h3>
+            <p class="muted">Pack garrafas & caixas • OBJ</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 45</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-tags="3d, hdr">
+          <div class="media"></div>
+          <div class="content">
+            <h3>HDRIs Studio</h3>
+            <p class="muted">6 mapas HDRI 8K</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 27</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+        <article class="card" data-tags="3d, texture">
+          <div class="media"></div>
+          <div class="content">
+            <h3>Texturas Procedurais</h3>
+            <p class="muted">Madeira, metal, tecido • 4K</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px">
+              <span class="price">R$ 29</span>
+              <button class="btn-green">Comprar</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============== FAQ ============== -->
+    <section id="faq" class="section" data-block="FAQ">
+      <h2>FAQ</h2>
+      <div class="faq" role="list">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Como funciona a entrega dos arquivos?
+            <span>+</span>
+          </button>
+          <div class="faq-a">Após a compra, você recebe um link para download imediato e um e-mail com o acesso. Em produtos atualizáveis, avisamos por e-mail.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Posso usar os kits em projetos de clientes?
+            <span>+</span>
+          </button>
+          <div class="faq-a">Sim, o uso comercial é permitido para projetos de clientes, mas a revenda direta dos arquivos é proibida.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Quais formas de pagamento vocês aceitam?
+            <span>+</span>
+          </button>
+          <div class="faq-a">Cartão, Pix e boleto. Em breve, carteira digital.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="container" data-block="Footer">
+    © <span id="year"></span> Hub de Designers — Todos os direitos reservados.
+  </footer>
+
+  <!-- Floating: WhatsApp & voltar ao topo -->
+  <div class="fab" aria-label="Ações flutuantes">
+    <a id="whats" class="btn-blue" href="https://wa.me/SEUNUMERO?text=Ol%C3%A1%2C%20tenho%20interesse%20nos%20seus%20designs" target="_blank" rel="noopener" title="Falar no WhatsApp" aria-label="WhatsApp">
+      <!-- Ícone WhatsApp -->
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11 11 0 0 0 3 19.1L2 22l3-1a11 11 0 0 0 15.5-17.6Zm-8 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.8.9.9-2.7-.2-.3A9 9 0 1 1 12.5 20.5Zm5-6.1c-.3-.2-1.7-.8-2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a7.3 7.3 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-2.1c-.2-.4 0-.6.2-.8h.4c.2 0 .3 0 .5.4s.6 1 .7 1 .2 0 .4 0l.4-.5c0-.2 0-.4 0-.5s0-.4-.2-.5l-.6-.7c-.2-.2-.5-.2-.7-.2h-.5c-.3.1-.8.3-1 .7s-.6.9-.6 1.5.6 1.7 1.4 2.5a10 10 0 0 0 2.4 1.8c1 .5 1.3.5 1.8.4a3 3 0 0 0 1.2-.8c.3-.5.3-1 .2-1.2Z"/></svg>
+    </a>
+    <button class="btn" id="toTop" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
+  </div>
+
+  <script>
+  'use strict';
+  // Tudo roda após DOM pronto para evitar race/TDZ
+  window.addEventListener('DOMContentLoaded', () => {
+    // Utilitários
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    // Ano no rodapé
+    $('#year').textContent = new Date().getFullYear();
+
+    // ===== THEME TOGGLE =====
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    if(savedTheme){ root.setAttribute('data-theme', savedTheme); }
+    $('#toggleTheme').addEventListener('click', ()=>{
+      const current = root.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // ===== LOUSA (wireframe) =====
+    const isWireframe = localStorage.getItem('wireframe') === '1';
+    if(isWireframe) document.body.classList.add('wireframe');
+    $('#toggleWire').addEventListener('click', ()=>{
+      document.body.classList.toggle('wireframe');
+      localStorage.setItem('wireframe', document.body.classList.contains('wireframe') ? '1' : '0');
+    });
+
+    // ===== VOLTAR AO TOPO =====
+    $('#toTop').addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
+
+    // ===== BUSCA =====
+    const searchInput = $('#search');
+    function normalize(t){ return t.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,''); }
+    function applySearch(){
+      const q = normalize(searchInput.value.trim());
+      const cards = $$('#gridProdutos .card, #grid3D .card');
+      cards.forEach(card=>{
+        const text = normalize(card.textContent);
+        card.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    }
+    searchInput.addEventListener('input', applySearch);
+
+    // ===== FILTROS =====
+    const chips = $$('.filters .chip');
+    const produtos = $$('#gridProdutos .card');
+    chips.forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        chips.forEach(c=>{ c.classList.toggle('active', c===chip); c.setAttribute('aria-selected', c===chip) })
+        const f = chip.dataset.filter;
+        produtos.forEach(card=>{
+          if(f==='todos') card.style.display='';
+          else {
+            const cats = (card.getAttribute('data-categories')||'').split(',').map(s=>s.trim());
+            card.style.display = cats.includes(f) ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // ===== CARROSSEL INFINITO (sem salto) =====
+    const track = $('#carouselTrack');
+    let slides = $$('.slide', track);
+
+    // criar clones
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone  = slides[slides.length-1].cloneNode(true);
+    firstClone.dataset.kind = 'clone';
+    lastClone.dataset.kind = 'clone';
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, slides[0]);
+
+    // atualizar referência (agora com clones)
+    slides = $$('.slide', track);
+
+    // Dots devem existir ANTES de chamarmos moveTo/updateDots
+    const dotsWrap = $('#dots');
+    const realCount = slides.filter(s=>s.dataset.kind!== 'clone').length;
+    dotsWrap.innerHTML = Array.from({length: realCount}).map(()=>'<span class="dot"></span>').join('');
+
+    // estado e helpers
+    let index = 1; // começa no primeiro real
+    function updateDots(){
+      const dots = $$('.dot', dotsWrap);
+      let currentReal = index-1; // mapeamento simples
+      if(index===0) currentReal = realCount-1;
+      if(index===realCount+1) currentReal = 0;
+      dots.forEach((d, i)=> d.classList.toggle('active', i===currentReal));
+    }
+
+    const moveTo = (i, withTransition=true)=>{
+      track.style.transition = withTransition ? 'transform .6s ease' : 'none';
+      track.style.transform = `translateX(-${i * 100}%)`;
+      index = i;
+      updateDots();
+      state.index = index; // expõe ao teste
+    };
+
+    // posição inicial agora que dots existem
+    moveTo(index, false);
+
+    // navegação
+    const next = ()=> moveTo(index+1);
+    const prev = ()=> moveTo(index-1);
+    $('#nextBtn').addEventListener('click', next);
+    $('#prevBtn').addEventListener('click', prev);
+
+    // correção ao atingir clones (loop perfeito)
+    const correctIfClone = ()=>{
+      if(slides[index].dataset.kind === 'clone'){
+        if(index === 0){            // foi para o clone do último → volta para o último real
+          moveTo(realCount, false);
+        } else if(index === realCount+1){ // foi para o clone do primeiro → volta para o primeiro real
+          moveTo(1, false);
+        }
+      }
+    };
+    track.addEventListener('transitionend', correctIfClone);
+
+    // autoplay com pausa de 5s
+    let auto = setInterval(next, 5000);
+    const resetAuto = ()=>{ clearInterval(auto); auto = setInterval(next, 5000); };
+    $('#nextBtn').addEventListener('click', resetAuto);
+    $('#prevBtn').addEventListener('click', resetAuto);
+    track.addEventListener('pointerdown', ()=>clearInterval(auto));
+    track.addEventListener('pointerup', resetAuto);
+    document.addEventListener('visibilitychange', ()=>{ if(document.hidden) clearInterval(auto); else resetAuto(); });
+
+    // ===== FAQ =====
+    $$('.faq-q').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const item = btn.closest('.faq-item');
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open);
+      });
+    });
+
+    // ===== TROCAR NÚMERO DO WHATS (opcional via querystring) =====
+    // Ex: adicionar ?whats=5599999999999 na URL para pré-preencher
+    const params = new URLSearchParams(location.search);
+    const qp = params.get('whats');
+    if(qp){ $('#whats').href = `https://wa.me/${qp}?text=Ol%C3%A1%2C%20tenho%20interesse%20nos%20seus%20designs`; }
+
+    // =====================
+    // TESTES (console)
+    // =====================
+    const state = { index, realCount };
+    window.App = {
+      next, prev, moveTo,
+      getState: () => ({...state}),
+      getDotsCount: () => $$('.dot', dotsWrap).length,
+      correctIfClone
+    };
+
+    function runCarouselTests(){
+      try{
+        console.group('%c[TESTES] Carrossel', 'color:#3b82f6');
+        console.assert(window.App.getDotsCount() === window.App.getState().realCount, 'Qtd de dots deve === realCount');
+        const before = window.App.getState().index;
+        window.App.next();
+        const after = window.App.getState().index;
+        console.assert(after === before+1, 'next() deve avançar 1 índice');
+        // Força ir ao clone e verificar correção (assíncrono por causa da transição)
+        window.App.moveTo(window.App.getState().realCount+1); // vai ao clone do primeiro
+        setTimeout(()=>{
+          const fixed = window.App.getState().index;
+          console.assert(fixed === 1, 'Ao atingir clone do primeiro, deve voltar para 1');
+          console.groupEnd();
+        }, 700);
+      }catch(e){
+        console.error('Falha nos testes de carrossel:', e);
+      }
+    }
+    // Executa os testes automaticamente uma vez (pode comentar depois)
+    runCarouselTests();
+  });
+  </script>
+</body>
+</html>
